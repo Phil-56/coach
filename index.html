@@ -364,10 +364,10 @@ async function loadProg() {
 const EX = {
   tirageH: { name: 'Tirage horizontal', detail: "À l'espalier · corps incliné · pieds au sol", min: 12, max: 15, safety: 'Expire en tirant, ne bloque jamais ta respiration.' },
   pompesI: { name: 'Pompes inclinées', detail: 'Mains sur le step', min: 12, max: 20, safety: 'Expire en poussant. Garde deux à trois répétitions en réserve.' },
-  tirageV: { name: 'Tirage vertical', detail: "À l'espalier · bras tendus", min: 15, max: 15, safety: 'Expire en tirant vers le bas, respiration continue.' },
+  tirageV: { name: 'Tirage vertical', detail: "À l'espalier · bras tendus · ce sont les épaules qui descendent", min: 15, max: 15, safety: 'Expire en abaissant les épaules. Coudes toujours tendus.' },
   curl:    { name: 'Curl biceps', detail: 'Haltères légers', min: 15, max: 20, safety: 'Expire en montant. Léger, sans à-coup.' },
   planche: { name: 'Planche sur ballon', detail: 'Corps gainé · respiration continue', min: 30, max: 45, unit: 's', safety: 'Respire en continu, ne bloque jamais ta respiration.' },
-  mollets: { name: 'Mollets excentriques', detail: 'Sur le step · lents · 3 s à la descente', min: 15, max: 15, tempo: 5, safety: 'Trois secondes à la descente. Expire en montant.' },
+  mollets: { name: 'Mollets excentriques', detail: 'Deux pieds sur le step · talons dans le vide · 3 s à la descente', min: 15, max: 15, tempo: 5, safety: 'Genoux immobiles. Trois secondes à la descente. Expire en montant.' },
   pompes:  { name: 'Pompes', detail: 'Au sol ou sur le step', min: 12, max: 20, safety: 'Expire en poussant. Garde deux à trois répétitions en réserve.' },
   dips:    { name: 'Dips sur le step', detail: 'Mains derrière, sur le step', min: 12, max: 15, safety: 'Expire en poussant. Amplitude confortable pour les épaules.' },
   elev:    { name: 'Élévations latérales', detail: 'Haltères légers', min: 15, max: 20, safety: "Expire en montant. Léger, jusqu'à l'horizontale." },
@@ -394,11 +394,11 @@ const DESC = {
 },
 "tirageV": {
 "pts": [
-"<b>Installation</b> : face à l'espalier, mains sur un barreau au-dessus de la tête, bras tendus. Pieds au sol près du mur, genoux un peu fléchis : les bras portent une partie du poids.",
-"<b>Mouvement</b> : sans plier les coudes, abaisse les épaules loin des oreilles : le corps monte de quelques centimètres. Tiens 1 s, puis relâche lentement.",
-"<b>Respire</b> : expire en abaissant les épaules. Petit mouvement, bras toujours tendus."
+"<b>Installation</b> : face à l'espalier, mains sur un barreau au-dessus de la tête, bras tendus. Plie un peu les genoux : tu es à moitié suspendu, pieds au sol.",
+"<b>Mouvement</b> : bras toujours tendus, tire les épaules vers le bas, loin des oreilles : le corps monte de 3 à 5 cm. Tiens 1 s, puis relâche lentement.",
+"<b>Attention</b> : les coudes ne plient jamais, ce n'est pas une traction. Expire en abaissant les épaules."
 ],
-"say": "Installation : face à l'espalier, saisis un barreau au-dessus de ta tête, bras tendus, mains écartées comme les épaules. Garde les pieds au sol, près du mur, et fléchis un peu les genoux pour que les bras portent une partie de ton poids. Mouvement : sans plier les coudes, abaisse les épaules, loin des oreilles. Ton corps monte de quelques centimètres. Tiens une seconde, puis relâche lentement. C'est un petit mouvement, les bras restent tendus. Expire en abaissant les épaules."
+"say": "Installation : face à l'espalier, attrape un barreau au-dessus de ta tête, bras tendus, mains écartées comme les épaules. Plie un peu les genoux : tu es à moitié suspendu, les pieds restent au sol. Laisse les épaules monter vers les oreilles. Mouvement : sans plier les coudes, tire les épaules vers le bas, comme pour les ranger dans tes poches arrière. Ton corps monte de quelques centimètres. Tiens une seconde, puis relâche lentement. Tes bras sont des cordes : ce sont les épaules qui travaillent. Expire en abaissant les épaules."
 },
 "curl": {
 "pts": [
@@ -418,11 +418,11 @@ const DESC = {
 },
 "mollets": {
 "pts": [
-"<b>Installation</b> : step contre l'espalier, une main sur un barreau. L'avant des pieds sur le bord du step, talons dans le vide.",
-"<b>Mouvement</b> : monte sur la pointe des deux pieds en 1 s, puis descends lentement en 3 s, jusqu'aux talons juste sous le niveau du step.",
-"<b>Respire</b> : expire en montant. Pas de rebond, pas d'étirement forcé."
+"<b>Installation</b> : les deux pieds côte à côte sur le step, seulement l'avant du pied sur le bord, talons dans le vide. Une main sur l'espalier.",
+"<b>Mouvement</b> : jambes droites, genoux immobiles. Monte sur la pointe en 1 s, puis laisse descendre les talons en 3 s, juste sous le niveau du step.",
+"<b>Attention</b> : ce n'est pas une montée de step, seules les chevilles bougent. Expire en montant, pas de rebond."
 ],
-"say": "Installation : place le step contre l'espalier et tiens un barreau d'une main pour l'équilibre. Pose l'avant des pieds sur le bord du step, les talons dans le vide. Mouvement : monte sur la pointe des deux pieds en une seconde. Puis descends lentement, en comptant trois secondes, jusqu'à ce que les talons passent juste sous le niveau du step. Sans rebond et sans forcer l'étirement. Expire en montant."
+"say": "Installation : step contre l'espalier, une main sur un barreau pour l'équilibre. Monte sur le step avec les deux pieds côte à côte, et recule-les jusqu'à ce que seul l'avant du pied soit sur le bord. Les talons sont dans le vide. Jambes droites : les genoux ne bougent pas, ce n'est pas une montée de step. Mouvement : monte sur la pointe des pieds en une seconde, en expirant. Puis laisse descendre les talons lentement, en comptant un, deux, trois, jusqu'à ce qu'ils passent juste sous le niveau du step. Remonte aussitôt, sans rebond."
 },
 "pompes": {
 "pts": [
@@ -532,7 +532,8 @@ function pushSets(steps, plan) {
    Toujours : échauffement 3 min + mollets excentriques 2 × 15. On ajoute des séries sans dépasser le programme. */
 function librePlan(minutes) {
   const first = nextForce(), second = first === 'A' ? 'B' : 'A';
-  let budget = minutes * 60 - 180 - 15 - (2 * workDur(EX.mollets) + PROG.repos_series_s);
+  // écran Apple Watch (20 s) + échauffement + installation + mollets (2 séries + repos)
+  let budget = minutes * 60 - 20 - 180 - Math.max(60, PROG.repos_exercices_s) - (2 * workDur(EX.mollets) + PROG.repos_series_s);
   const counts = {}, order = [];
   [first, second].forEach(sess => {
     const pool = PLANS[sess].filter(([id]) => id !== 'mollets');
@@ -602,21 +603,22 @@ const ILL = {
   pompesI: { props: step(150, 125, 66, 40) + floor(),
     a: fig({ h: [184, 70], n: [172, 80], p: [106, 121], a1: [[175, 102], [177, 125]], a2: [[171, 102], [173, 125]], l1: [[72, 142], [40, 163]], l2: [[72, 142], [40, 163]] }),
     b: fig({ h: [178, 100], n: [166, 107], p: [103, 135], a1: [[151, 117], [177, 125]], a2: [[149, 115], [173, 125]], l1: [[71, 149], [40, 163]], l2: [[71, 149], [40, 163]] }) },
-  tirageV: { props: esp(170) + floor(),
-    a: fig({ h: [131, 32], n: [134, 44], p: [124, 98], a1: [[152, 18], [172, -6]], a2: [[150, 20], [170, -2]], l1: [[148, 128], [138, 165]], l2: [[146, 130], [134, 165]],
-      x: label(14, 40, 'épaules') + label(14, 60, 'relâchées') }),
-    b: fig({ h: [134, 16], n: [136, 30], p: [128, 84], a1: [[155, 12], [172, -6]], a2: [[153, 14], [170, -2]], l1: [[150, 120], [138, 165]], l2: [[148, 122], [134, 165]],
-      x: arrow(100, 100, 100, 62) + label(14, 40, 'épaules') + label(14, 60, 'basses') }) },
+  tirageV: { props: '<line class="pr" x1="50" y1="-6" x2="190" y2="-6" style="stroke-width:8"/>' + floor() + label(56, -12, 'barreau'),   // vue de dos
+    a: '<polyline class="fig" points="95,-6 105,40 135,40 145,-6"/><line class="fig" x1="120" y1="40" x2="120" y2="100"/>'
+      + '<polyline class="fig" points="120,100 110,128 106,165"/><polyline class="fig" points="120,100 130,128 134,165"/><circle class="hd" cx="120" cy="30" r="11"/>'
+      + label(152, 70, 'épaules') + label(152, 92, 'hautes'),
+    b: '<polyline class="fig" points="95,-6 104,30 136,30 145,-6"/><line class="fig" x1="120" y1="22" x2="120" y2="88"/>'
+      + '<polyline class="fig" points="120,88 111,120 106,165"/><polyline class="fig" points="120,88 129,120 134,165"/><circle class="hd" cx="120" cy="10" r="11"/>'
+      + arrow(84, 22, 84, 46) + arrow(156, 22, 156, 46) + label(152, 70, 'épaules') + label(152, 92, 'basses') + arrow(30, 130, 30, 96) + label(8, 152, '+3-5 cm') },
   curl: { props: floor(),
     a: fig(STAND(120, { a1: [[122, 82], [125, 104]], x: db(125, 104) })),
     b: fig(STAND(120, { a1: [[122, 82], [140, 64]], x: db(140, 64) + arrow(160, 100, 160, 68) })) },
   planche: { props: ball(190, 139, 26) + floor(),
     a: fig({ h: [186, 96], n: [172, 104], p: [106, 134], a1: [[178, 116], [200, 113]], a2: [[176, 118], [198, 115]], l1: [[73, 149], [40, 163]], l2: [[73, 149], [40, 163]], x: label(60, 60, '30-45 s') }) },
-  mollets: { props: esp(20) + step(92, 128, 110, 38) + floor() + '<line class="ar" x1="60" y1="128" x2="92" y2="128" stroke-dasharray="4 5"/>',
-    a: fig({ h: [104, -4], n: [104, 9], p: [104, 58], a1: [[78, 26], [44, 26]], a2: [[80, 30], [44, 30]], l1: [[106, 88], [100, 115], [118, 128]], l2: [[104, 88], [98, 115], [116, 128]],
-      x: '<line class="fig" x1="86" y1="113" x2="100" y2="115"/>' + arrow(170, 90, 170, 50) + label(180, 75, '1 s') }),
-    b: fig({ h: [102, 16], n: [102, 29], p: [102, 78], a1: [[76, 40], [44, 42]], a2: [[78, 44], [44, 46]], l1: [[104, 108], [96, 136], [118, 128]], l2: [[102, 108], [94, 136], [116, 128]],
-      x: '<line class="fig" x1="82" y1="140" x2="96" y2="136"/>' + arrow(170, 50, 170, 100) + label(180, 80, '3 s') }) },
+  mollets: { props: step(100, 110, 136, 56) + floor() + '<line class="ar" x1="20" y1="110" x2="100" y2="110" stroke-dasharray="5 6"/>'   // gros plan jambes / pieds
+      + label(150, -2, 'genoux') + label(150, 18, 'tendus'),
+    a: '<polyline class="fig far" points="88,-16 87,34 84,82"/><line class="fig far" x1="72" y1="78" x2="108" y2="110"/><polyline class="fig" points="94,-16 93,34 90,82"/><line class="fig" x1="78" y1="78" x2="114" y2="110"/>' + arrow(215, 80, 215, 30) + label(176, 100, '1 s'),
+    b: '<polyline class="fig far" points="86,16 85,66 82,114"/><line class="fig far" x1="70" y1="122" x2="108" y2="110"/><polyline class="fig" points="92,16 91,66 88,114"/><line class="fig" x1="76" y1="122" x2="114" y2="110"/>' + arrow(215, 30, 215, 80) + label(176, 100, '3 s') + label(4, 150, 'talons') + label(4, 170, 'dans le vide') },
   pompes: { props: floor(),
     a: fig({ h: [178, 104], n: [165, 112], p: [100, 138], a1: [[166, 138], [166, 165]], a2: [[162, 138], [162, 165]], l1: [[70, 150], [40, 163]], l2: [[70, 150], [40, 163]] }),
     b: fig({ h: [179, 136], n: [165, 140], p: [100, 152], a1: [[148, 147], [166, 165]], a2: [[146, 149], [162, 165]], l1: [[70, 157], [40, 163]], l2: [[70, 157], [40, 163]] }) },
