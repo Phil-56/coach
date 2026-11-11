@@ -1,0 +1,24 @@
+{
+  "version": "2026-11",
+  "note": "Programme de départ. Objectifs à redéfinir après la première analyse mensuelle de l'export Apple Watch.",
+  "semaine": {
+    "lundi": "force",
+    "mardi": "marche",
+    "mercredi": "force",
+    "jeudi": "marche",
+    "vendredi": "force",
+    "samedi": "sortie_longue",
+    "dimanche": "repos"
+  },
+  "sauna": { "jours": ["mardi", "jeudi"], "duree_min": 25 },
+  "cibles": { "force": 3, "sauna": 2, "soir": 7, "marche": 2 },
+  "intensite": false,
+  "repos_series_s": 60,
+  "repos_exercices_s": 75,
+  "objectifs": [
+    "3 séances de force par semaine (alternance A / B)",
+    "Sauna infrarouge 2 matins par semaine",
+    "Séance du soir tous les soirs",
+    "Une sortie longue VTT le samedi si la météo le permet"
+  ]
+}
