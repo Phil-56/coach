@@ -21,7 +21,7 @@
   --text:#f5f7fa; --muted:#a3b0bd; --dim:#6f7c89;
   --green:#2fd36b; --orange:#ff9f1a; --red:#ff5252; --blue:#4fa8ff; --violet:#b88cff; --teal:#3fd5c8; --rose:#ff7aa8;
   --accent:#ffd60a;
-  --band-h:clamp(46px,7.2vh,76px);
+  --band-h:clamp(28px,5vh,50px);
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text)}
@@ -36,8 +36,8 @@ h1,h2,h3,p{margin:0}
 
 /* ---------- bande permanente ---------- */
 #band{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--accent);color:#000;
-  min-height:var(--band-h);padding:0 16px env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:center;
-  font-weight:850;font-size:clamp(15px,min(2.5vw,4.2vh),40px);text-align:center;letter-spacing:.01em}
+  min-height:var(--band-h);padding:0 12px env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:clamp(12px,min(1.9vw,3.2vh),30px);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- accueil ---------- */
 .home{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(12px,1.4vw,28px);
@@ -159,6 +159,13 @@ table.w4 td:first-child,table.w4 th:first-child{text-align:left}
 .is-breath .breath{display:block}
 .breath.in{transform:scale(1);transition-duration:4s}
 .breath.out{transform:scale(.45);transition-duration:6s}
+.exdesc{display:none;margin:.5em 0 0;padding-left:1.1em;font-size:clamp(16px,min(1.9vw,3.4vh),36px);line-height:1.3;color:#e8eef4}
+.exdesc li{margin:.25em 0}.exdesc b{color:var(--accent)}
+.is-intro .exdesc{display:block}
+.is-intro .exdetail,.is-intro .exsafety{display:none}
+.is-intro .extarget{font-size:clamp(20px,min(2.8vw,5vh),56px)}
+.is-intro .exset{display:none}
+.is-watch .phase{background:var(--accent);color:#1a1400}
 .paused-tag{display:none;color:var(--orange);font-weight:900}
 .paused .paused-tag{display:inline}
 
@@ -177,8 +184,12 @@ table.w4 td:first-child,table.w4 th:first-child{text-align:left}
 
 /* ---------- iPhone en paysage = ce que l'Apple TV affiche en recopie AirPlay ---------- */
 @media (max-height:520px) and (min-aspect-ratio:1/1){
-  :root{--band-h:34px}
-  #band{font-size:clamp(14px,2.2vw,20px)}
+  .exdesc{font-size:min(1.75vw,3.7vh)}
+  .is-intro .exname{font-size:min(5vw,10.5vh)}
+  .is-intro .ringwrap{--ring:min(15vw,32vh)}
+  .is-intro .extarget{font-size:min(2.6vw,5.4vh)}
+  :root{--band-h:26px}
+  #band{font-size:clamp(12px,1.8vw,16px)}
   .runbar{padding:4px 14px;gap:6px}
   .runinfo{font-size:14px}
   .runbtns .btn{min-height:44px;font-size:15px;padding:.15em .8em}
@@ -209,7 +220,8 @@ table.w4 td:first-child,table.w4 th:first-child{text-align:left}
   .runbtns{width:100%;flex-wrap:nowrap}
   .runbtns .btn{flex:1;min-width:0;padding:.3em .3em;font-size:16px}
   .week{font-size:.68em}
-  #band{font-size:clamp(14px,3.9vw,26px)}
+  :root{--band-h:28px}
+  #band{font-size:clamp(12px,3.3vw,18px)}
 }
 </style>
 </head>
@@ -263,6 +275,7 @@ table.w4 td:first-child,table.w4 th:first-child{text-align:left}
       <div class="extarget" id="exTarget"></div>
       <div class="exset" id="exSet"></div>
       <div class="exsafety" id="exSafety"></div>
+      <ul class="exdesc" id="exDesc"></ul>
     </div>
     <div class="vis">
     <div class="illus" id="illus"></div>
@@ -285,8 +298,9 @@ table.w4 td:first-child,table.w4 th:first-child{text-align:left}
   </div>
 </section>
 
-<div id="band">12 à 20 répétitions · Expire à l'effort · 2-3 répétitions en réserve</div>
+<div id="band">12-20 répétitions · Expire à l'effort · 2-3 en réserve</div>
 
+<audio id="voice" preload="auto" playsinline x-webkit-airplay="allow" src="voix.m4a"></audio>
 <video id="nosleep" muted playsinline loop preload="auto" src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAM2bW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAmF0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAABAAAAAQAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPoAAAAAAABAAAAAAHZbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAAoAAAAKABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABhG1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAURzdGJsAAAAuHN0c2QAAAAAAAAAAQAAAKhhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAABAAEABIAAAASAAAAAAAAAABFExhdmM2My4xLjEwMCBsaWJ4MjY0AAAAAAAAAAAAAAAAGP//AAAALmF2Y0MBQsAK/+EAFmdCwArZHsBEAAADAAQAAAMAKDxImSABAAVoy4PLIAAAABBwYXNwAAAAAQAAAAEAAAAUYnRydAAAAAAAABVIAAAAAAAAABhzdHRzAAAAAAAAAAEAAAAFAAAIAAAAABRzdHNzAAAAAAAAAAEAAAABAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAAFAAAAAQAAAChzdHN6AAAAAAAAAAAAAAAFAAACgwAAAAoAAAAKAAAACQAAAAkAAAAUc3RjbwAAAAAAAAABAAADZgAAAGF1ZHRhAAAAWW1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALGlsc3QAAAAkqXRvbwAAABxkYXRhAAAAAQAAAABMYXZmNjMuMS4xMDAAAAAIZnJlZQAAArFtZGF0AAACcAYF//9s3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2NCByMzE5MCA3ZWQ3NTNiIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyNCAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTAgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MToweDExMSBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MCBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTEgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0wIHdlaWdodHA9MCBrZXlpbnQ9MjUwIGtleWludF9taW49NSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTQwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAAAtliIQEfJigADYjgAAAAAZBmjgI+oAAAAAGQZpUAj6gAAAABUGaYBD1AAAABUGagD/U"></video>
 
 <script>
@@ -338,8 +352,9 @@ async function loadProg() {
     p.sauna = Object.assign({}, DEFAULT_PROG.sauna, j.sauna || {});
     p.cibles = Object.assign({}, DEFAULT_PROG.cibles, j.cibles || {});
     // garde-fous : repos dans la fourchette 60-90 s quoi qu'il arrive
-    p.repos_series_s = Math.min(90, Math.max(60, +p.repos_series_s || 60));
-    p.repos_exercices_s = Math.min(90, Math.max(60, +p.repos_exercices_s || 75));
+    const r5 = (v, d) => Math.round(Math.min(90, Math.max(60, +v || d)) / 5) * 5;   // 60-90 s, par pas de 5 (voix pré-enregistrées)
+    p.repos_series_s = r5(p.repos_series_s, 60);
+    p.repos_exercices_s = r5(p.repos_exercices_s, 75);
     PROG = p;
   } catch (e) { /* hors ligne ou absent : programme par défaut */ }
   finally { clearTimeout(to); }
@@ -359,6 +374,104 @@ const EX = {
   triceps: { name: 'Extensions triceps', detail: 'Au-dessus de la tête · léger', min: 15, max: 15, safety: 'Expire en tendant les bras. Charge légère.' },
   fentes:  { name: 'Fentes avant', detail: 'Pose le pied doucement, sans élan', min: 12, max: 12, per: 'jambe', safety: 'Expire en remontant, ne bloque jamais ta respiration.' },
   deadbug: { name: 'Dead bug', detail: 'Au sol, sur le dos · bas du dos plaqué', min: 12, max: 12, per: 'côté', safety: 'Expire en tendant bras et jambe.' },
+};
+const DESC = {
+"tirageH": {
+"pts": [
+"<b>Installation</b> : face à l'espalier, mains sur un barreau à hauteur de poitrine, pieds avancés vers le mur.",
+"<b>Mouvement</b> : penche-toi en arrière bras tendus, corps droit, puis tire la poitrine vers le barreau en serrant les omoplates. Redescends lentement.",
+"<b>Respire</b> : expire en tirant. Pieds plus près du mur = plus difficile."
+],
+"say": "Installation : face à l'espalier, saisis un barreau à hauteur de poitrine, mains écartées comme les épaules. Avance les pieds vers le mur et penche-toi en arrière, bras tendus, le corps droit comme une planche. Mouvement : tire la poitrine vers le barreau en serrant les omoplates, coudes près du corps, puis redescends lentement. Plus les pieds sont près du mur, plus c'est difficile. Expire en tirant."
+},
+"pompesI": {
+"pts": [
+"<b>Installation</b> : mains sur le step, un peu plus larges que les épaules, pieds reculés, corps aligné de la tête aux talons.",
+"<b>Mouvement</b> : descends la poitrine vers le bord du step en 2 s, coudes à 45°, puis pousse.",
+"<b>Respire</b> : inspire en descendant, expire en poussant."
+],
+"say": "Installation : pose les mains sur le step, un peu plus larges que les épaules. Recule les pieds jusqu'à ce que le corps soit aligné de la tête aux talons, ventre serré. Mouvement : descends la poitrine vers le bord du step en deux secondes, coudes à quarante-cinq degrés, puis pousse pour remonter. Expire en poussant."
+},
+"tirageV": {
+"pts": [
+"<b>Installation</b> : face à l'espalier, mains sur un barreau au-dessus de la tête, bras tendus. Pieds au sol près du mur, genoux un peu fléchis : les bras portent une partie du poids.",
+"<b>Mouvement</b> : sans plier les coudes, abaisse les épaules loin des oreilles : le corps monte de quelques centimètres. Tiens 1 s, puis relâche lentement.",
+"<b>Respire</b> : expire en abaissant les épaules. Petit mouvement, bras toujours tendus."
+],
+"say": "Installation : face à l'espalier, saisis un barreau au-dessus de ta tête, bras tendus, mains écartées comme les épaules. Garde les pieds au sol, près du mur, et fléchis un peu les genoux pour que les bras portent une partie de ton poids. Mouvement : sans plier les coudes, abaisse les épaules, loin des oreilles. Ton corps monte de quelques centimètres. Tiens une seconde, puis relâche lentement. C'est un petit mouvement, les bras restent tendus. Expire en abaissant les épaules."
+},
+"curl": {
+"pts": [
+"<b>Installation</b> : debout, un haltère léger dans chaque main, paumes vers l'avant, coudes collés au corps.",
+"<b>Mouvement</b> : plie les coudes pour monter les haltères sans balancer le buste, redescends en 2 s.",
+"<b>Respire</b> : expire en montant."
+],
+"say": "Installation : debout, pieds écartés comme les hanches, un haltère léger dans chaque main, paumes vers l'avant, coudes collés au corps. Mouvement : plie les coudes pour monter les haltères vers les épaules, sans balancer le buste. Redescends en deux secondes, jusqu'aux bras presque tendus. Expire en montant."
+},
+"planche": {
+"pts": [
+"<b>Installation</b> : avant-bras posés sur le ballon, coudes sous les épaules, pieds en arrière.",
+"<b>Position</b> : corps aligné de la tête aux talons, ventre serré, fesses ni hautes ni basses. Tiens 30 à 45 s.",
+"<b>Respire</b> calmement, sans bloquer. Arrête dès que le bas du dos se creuse."
+],
+"say": "Installation : pose les avant-bras sur le ballon, coudes sous les épaules, et recule les pieds. Position : le corps est aligné de la tête aux talons, ventre serré, fesses ni trop hautes ni trop basses. Tiens trente à quarante-cinq secondes. Respire calmement et en continu. Arrête dès que le bas du dos se creuse."
+},
+"mollets": {
+"pts": [
+"<b>Installation</b> : step contre l'espalier, une main sur un barreau. L'avant des pieds sur le bord du step, talons dans le vide.",
+"<b>Mouvement</b> : monte sur la pointe des deux pieds en 1 s, puis descends lentement en 3 s, jusqu'aux talons juste sous le niveau du step.",
+"<b>Respire</b> : expire en montant. Pas de rebond, pas d'étirement forcé."
+],
+"say": "Installation : place le step contre l'espalier et tiens un barreau d'une main pour l'équilibre. Pose l'avant des pieds sur le bord du step, les talons dans le vide. Mouvement : monte sur la pointe des deux pieds en une seconde. Puis descends lentement, en comptant trois secondes, jusqu'à ce que les talons passent juste sous le niveau du step. Sans rebond et sans forcer l'étirement. Expire en montant."
+},
+"pompes": {
+"pts": [
+"<b>Installation</b> : mains au sol un peu plus larges que les épaules, corps aligné. Mains sur le step si c'est trop dur.",
+"<b>Mouvement</b> : descends la poitrine en 2 s, coudes à 45°, puis pousse.",
+"<b>Respire</b> : expire en poussant. Garde 2 à 3 répétitions en réserve."
+],
+"say": "Installation : mains au sol, un peu plus larges que les épaules, corps aligné de la tête aux talons. Si c'est trop difficile, pose les mains sur le step. Mouvement : descends la poitrine en deux secondes, coudes à quarante-cinq degrés, puis pousse pour remonter. Expire en poussant."
+},
+"dips": {
+"pts": [
+"<b>Installation</b> : assis au bord du step, mains à côté des fesses, doigts vers l'avant. Avance les fesses dans le vide, pieds au sol, genoux à 90°.",
+"<b>Mouvement</b> : plie les coudes vers l'arrière pour descendre de 10 à 15 cm, puis pousse pour remonter.",
+"<b>Respire</b> : expire en poussant. Descends moins si les épaules tirent."
+],
+"say": "Installation : assieds-toi au bord du step, mains posées à côté des fesses, doigts vers l'avant. Avance les fesses dans le vide, pieds au sol, genoux pliés à angle droit. Mouvement : plie les coudes vers l'arrière pour descendre de dix à quinze centimètres, puis pousse sur les mains pour remonter. Descends moins si les épaules tirent. Expire en poussant."
+},
+"elev": {
+"pts": [
+"<b>Installation</b> : debout, haltères légers le long du corps, coudes légèrement fléchis.",
+"<b>Mouvement</b> : monte les bras sur les côtés jusqu'à l'horizontale, pas plus haut, épaules basses. Redescends en 2 s.",
+"<b>Respire</b> : expire en montant."
+],
+"say": "Installation : debout, un haltère léger dans chaque main, bras le long du corps, coudes légèrement fléchis. Mouvement : monte les bras sur les côtés jusqu'à l'horizontale, pas plus haut, en gardant les épaules basses. Redescends en deux secondes. Expire en montant."
+},
+"triceps": {
+"pts": [
+"<b>Installation</b> : debout, un haltère léger tenu à deux mains au-dessus de la tête, bras tendus.",
+"<b>Mouvement</b> : plie les coudes pour descendre l'haltère derrière la tête, coudes vers le plafond, puis tends les bras.",
+"<b>Respire</b> : expire en tendant les bras."
+],
+"say": "Installation : debout, tiens un haltère léger à deux mains au-dessus de la tête, bras tendus. Mouvement : plie les coudes pour descendre l'haltère derrière la tête, les coudes restent pointés vers le plafond et proches de la tête. Puis tends les bras. Expire en tendant les bras."
+},
+"fentes": {
+"pts": [
+"<b>Installation</b> : debout, pieds écartés comme les hanches, une main sur l'espalier si besoin.",
+"<b>Mouvement</b> : grand pas en avant, pied posé doucement, descends le genou arrière vers le sol sans le toucher, puis reviens.",
+"<b>Respire</b> : expire en remontant. 12 d'un côté, puis 12 de l'autre."
+],
+"say": "Installation : debout, pieds écartés comme les hanches. Tu peux tenir l'espalier d'une main pour l'équilibre. Mouvement : fais un grand pas en avant, pose le pied doucement, puis descends le genou arrière vers le sol, sans le toucher. Le genou avant reste au-dessus de la cheville. Pousse sur le talon avant pour revenir. Douze d'un côté, puis douze de l'autre. Expire en remontant."
+},
+"deadbug": {
+"pts": [
+"<b>Installation</b> : allongé sur le dos, bras tendus vers le plafond, hanches et genoux pliés à 90°, bas du dos plaqué au sol.",
+"<b>Mouvement</b> : tends lentement un bras derrière la tête et la jambe opposée vers l'avant, puis reviens. Alterne.",
+"<b>Respire</b> : expire en tendant. Le dos ne se décolle pas."
+],
+"say": "Installation : allongé sur le dos, bras tendus vers le plafond, hanches et genoux pliés à angle droit, bas du dos plaqué au sol. Mouvement : tends lentement un bras derrière la tête et la jambe opposée vers l'avant, sans que le dos se décolle. Reviens, puis change de côté. Douze de chaque côté. Expire en tendant."
+}
 };
 const PLANS = {
   A: [['tirageH', 3], ['pompesI', 3], ['tirageV', 2], ['curl', 2], ['planche', 3], ['mollets', 2]],
@@ -396,8 +509,16 @@ function warmup(steps, total) {
     w('Échauffement 4/4', 'Montées de genoux', 'En marchant, sans sauter', 180, 'Montées de genoux, en marchant, sans sauter.');
   }
 }
+const WATCH = {
+  force: ["Entraînement : Renforcement musculaire fonctionnel", "Avant de commencer, lance l'Apple Watch : entraînement Renforcement musculaire fonctionnel."],
+  marche: ["Entraînement : Marche (extérieur ou intérieur)", "Avant de commencer, lance l'Apple Watch : entraînement Marche."],
+  inten: ["Lance un entraînement sur l'Apple Watch", "Avant de commencer, lance un entraînement sur l'Apple Watch."],
+};
+function watchStep(steps, kind) {
+  steps.push({ kind: 'timed', cls: 'is-watch', nolog: true, ill: 'watch', label: 'Avant de commencer', title: "Lance l'Apple Watch", detail: WATCH[kind][0], dur: 20, say: WATCH[kind][1] });
+}
 function pushSets(steps, plan) {
-  steps.push({ kind: 'rest', dur: 15, prep: true });
+  steps.push({ kind: 'rest', dur: Math.max(60, PROG.repos_exercices_s), prep: true });
   plan.forEach(([id, sets], ei) => {
     const e = EX[id];
     for (let s = 1; s <= sets; s++) {
@@ -426,10 +547,10 @@ function librePlan(minutes) {
 }
 function buildSteps(type) {
   const steps = [];
-  if (type === 'A' || type === 'B') { warmup(steps, 3); pushSets(steps, PLANS[type]); }
-  else if (/^L\d+$/.test(type)) { warmup(steps, 3); pushSets(steps, librePlan(+type.slice(1))); }
+  if (type === 'A' || type === 'B') { watchStep(steps, 'force'); warmup(steps, 3); pushSets(steps, PLANS[type]); }
+  else if (/^L\d+$/.test(type)) { watchStep(steps, 'force'); warmup(steps, 3); pushSets(steps, librePlan(+type.slice(1))); }
   else if (type === 'I') {
-    warmup(steps, 10);
+    watchStep(steps, 'inten'); warmup(steps, 10);
     for (let b = 1; b <= 5; b++) {
       steps.push({ kind: 'timed', cls: '', log: 'Montées de step', label: `Bloc ${b} sur 5`, title: 'Montées de step', detail: 'Cadence soutenue · pied entier sur le step, jamais sur la pointe · bras levés au-dessus de la tête', dur: 120,
         say: `Bloc ${b} sur 5. Montées de step, deux minutes, cadence soutenue. Pied entier sur le step, bras au-dessus de la tête. Expire, ne bloque jamais ta respiration.`,
@@ -443,6 +564,7 @@ function buildSteps(type) {
     steps.push({ kind: 'timed', cls: 'is-breath', log: 'Étirements libres', label: 'Étirements', title: 'Étirements libres', detail: 'Sans forcer · respiration lente · pense aux mollets', dur: 240, say: 'Étirements libres, quatre minutes. Sans forcer, respire lentement.' });
   }
   else if (type === 'M') {
+    watchStep(steps, 'marche');
     steps.push({ kind: 'timed', cls: '', log: 'Marche', label: 'Marche', title: 'Marche 30 min', detail: 'Allure confortable · respiration aisée', dur: 1800, say: 'Marche, trente minutes, allure confortable.',
       cues: [{ at: 600, say: 'Dix minutes.' }, { at: 1200, say: 'Vingt minutes.' }, { at: 1740, say: 'Plus qu’une minute.' }] });
   }
@@ -480,17 +602,21 @@ const ILL = {
   pompesI: { props: step(150, 125, 66, 40) + floor(),
     a: fig({ h: [184, 70], n: [172, 80], p: [106, 121], a1: [[175, 102], [177, 125]], a2: [[171, 102], [173, 125]], l1: [[72, 142], [40, 163]], l2: [[72, 142], [40, 163]] }),
     b: fig({ h: [178, 100], n: [166, 107], p: [103, 135], a1: [[151, 117], [177, 125]], a2: [[149, 115], [173, 125]], l1: [[71, 149], [40, 163]], l2: [[71, 149], [40, 163]] }) },
-  tirageV: { props: esp(200) + floor(),
-    a: fig({ h: [132, 50], n: [138, 62], p: [152, 113], a1: [[169, 41], [200, 18]], a2: [[167, 43], [200, 22]], l1: [[166, 139], [180, 165]], l2: [[164, 139], [176, 165]] }),
-    b: fig({ h: [156, 42], n: [160, 55], p: [166, 108], a1: [[180, 37], [200, 18]], a2: [[178, 39], [200, 22]], l1: [[173, 137], [180, 165]], l2: [[171, 137], [176, 165]], x: label(60, 30, 'bras tendus') }) },
+  tirageV: { props: esp(170) + floor(),
+    a: fig({ h: [131, 32], n: [134, 44], p: [124, 98], a1: [[152, 18], [172, -6]], a2: [[150, 20], [170, -2]], l1: [[148, 128], [138, 165]], l2: [[146, 130], [134, 165]],
+      x: label(14, 40, 'épaules') + label(14, 60, 'relâchées') }),
+    b: fig({ h: [134, 16], n: [136, 30], p: [128, 84], a1: [[155, 12], [172, -6]], a2: [[153, 14], [170, -2]], l1: [[150, 120], [138, 165]], l2: [[148, 122], [134, 165]],
+      x: arrow(100, 100, 100, 62) + label(14, 40, 'épaules') + label(14, 60, 'basses') }) },
   curl: { props: floor(),
     a: fig(STAND(120, { a1: [[122, 82], [125, 104]], x: db(125, 104) })),
     b: fig(STAND(120, { a1: [[122, 82], [140, 64]], x: db(140, 64) + arrow(160, 100, 160, 68) })) },
   planche: { props: ball(190, 139, 26) + floor(),
     a: fig({ h: [186, 96], n: [172, 104], p: [106, 134], a1: [[178, 116], [200, 113]], a2: [[176, 118], [198, 115]], l1: [[73, 149], [40, 163]], l2: [[73, 149], [40, 163]], x: label(60, 60, '30-45 s') }) },
-  mollets: { props: step(100, 135, 80, 30) + floor(),
-    a: fig({ h: [110, 13], n: [110, 26], p: [110, 73], a1: [[112, 50], [114, 72]], a2: [[108, 50], [110, 72]], l1: [[110, 103], [104, 127], [120, 135]], l2: [[108, 103], [102, 127], [118, 135]] }),
-    b: fig({ h: [108, 27], n: [108, 40], p: [108, 87], a1: [[110, 64], [112, 86]], a2: [[106, 64], [108, 86]], l1: [[106, 117], [100, 146], [120, 135]], l2: [[104, 117], [98, 146], [118, 135]], x: arrow(60, 40, 60, 100) + label(36, 128, '3 s') }) },
+  mollets: { props: esp(20) + step(92, 128, 110, 38) + floor() + '<line class="ar" x1="60" y1="128" x2="92" y2="128" stroke-dasharray="4 5"/>',
+    a: fig({ h: [104, -4], n: [104, 9], p: [104, 58], a1: [[78, 26], [44, 26]], a2: [[80, 30], [44, 30]], l1: [[106, 88], [100, 115], [118, 128]], l2: [[104, 88], [98, 115], [116, 128]],
+      x: '<line class="fig" x1="86" y1="113" x2="100" y2="115"/>' + arrow(170, 90, 170, 50) + label(180, 75, '1 s') }),
+    b: fig({ h: [102, 16], n: [102, 29], p: [102, 78], a1: [[76, 40], [44, 42]], a2: [[78, 44], [44, 46]], l1: [[104, 108], [96, 136], [118, 128]], l2: [[102, 108], [94, 136], [116, 128]],
+      x: '<line class="fig" x1="82" y1="140" x2="96" y2="136"/>' + arrow(170, 50, 170, 100) + label(180, 80, '3 s') }) },
   pompes: { props: floor(),
     a: fig({ h: [178, 104], n: [165, 112], p: [100, 138], a1: [[166, 138], [166, 165]], a2: [[162, 138], [162, 165]], l1: [[70, 150], [40, 163]], l2: [[70, 150], [40, 163]] }),
     b: fig({ h: [179, 136], n: [165, 140], p: [100, 152], a1: [[148, 147], [166, 165]], a2: [[146, 149], [162, 165]], l1: [[70, 157], [40, 163]], l2: [[70, 157], [40, 163]] }) },
@@ -523,6 +649,9 @@ const ILL = {
   step: { props: step(130, 135, 72, 31) + floor(),
     a: fig({ h: [112, 45], n: [112, 58], p: [112, 105], a1: [[115, 30], [118, 6]], a2: [[109, 30], [106, 6]], l1: [[142, 112], [150, 135]], l2: [[111, 135], [110, 165]] }),
     b: fig({ h: [165, 15], n: [165, 28], p: [165, 75], a1: [[168, 2], [171, -16]], a2: [[162, 2], [159, -16]], l1: [[166, 105], [168, 135]], l2: [[163, 105], [162, 135]], x: label(20, 40, 'pied entier') }) },
+  watch: { props: '<rect class="pf" x="96" y="-6" width="48" height="26" rx="6"/><rect class="pf" x="96" y="126" width="48" height="30" rx="6"/>'
+      + '<rect x="82" y="16" width="76" height="112" rx="22" fill="#0d141c" stroke="#f5f7fa" stroke-width="6"/>',
+    a: '<polygon class="ah" points="110,50 110,94 146,72"/>' + '<rect x="160" y="50" width="8" height="22" rx="3" fill="#6f93bd"/>' },
   etir: { props: esp(200) + floor(),
     a: fig({ h: [170, 48], n: [166, 60], p: [140, 108], a1: [[184, 58], [200, 50]], a2: [[182, 62], [200, 58]], l1: [[160, 135], [168, 165]], l2: [[112, 136], [86, 165]] }) },
 };
@@ -535,7 +664,7 @@ function svgIll(key) {
 function illFor(st) {
   if (!st) return '';
   if (st.kind === 'work') return svgIll(st.id);
-  if (st.kind === 'timed') return svgIll(ILL_BY_TITLE[st.title]);
+  if (st.kind === 'timed') return svgIll(st.ill || ILL_BY_TITLE[st.title]);
   return '';
 }
 
@@ -550,8 +679,48 @@ function pickVoice() {
   } catch (e) {}
 }
 if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
-function say(text, rate) {
-  if (muted || !('speechSynthesis' in window) || !text) return;
+/* Les annonces sont des extraits d'un fichier audio (voix.m4a + voix.json) : un élément <audio>
+   suit la recopie AirPlay vers l'Apple TV et joue plus fort que la synthèse vocale. Synthèse vocale en secours. */
+function hkey(t) { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
+const AUD = { map: null, q: [], cur: null, curBeep: false, timer: 0, unlocked: false, broken: false, miss: [] };
+const aEl = () => $('#voice');
+async function loadVoix() {
+  try { const r = await fetch('voix.json', { cache: 'no-cache' }); if (r.ok) AUD.map = await r.json(); } catch (e) {}
+}
+function audioOK() { return !!(AUD.map && AUD.unlocked && !AUD.broken); }
+function stopAudio() { AUD.q = []; AUD.cur = null; AUD.curBeep = false; clearTimeout(AUD.timer); try { aEl().pause(); } catch (e) {} }
+function nextSeg() {
+  clearTimeout(AUD.timer);
+  const r = AUD.q.shift();
+  if (!r) { AUD.cur = null; AUD.curBeep = false; try { aEl().pause(); } catch (e) {} return; }
+  AUD.cur = r.range; AUD.curBeep = !!r.beep;
+  const el = aEl();
+  try { el.currentTime = r.range[0]; const p = el.play(); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+  const watch = () => { AUD.timer = setTimeout(() => {
+    if (!AUD.cur) return;
+    if (el.currentTime >= AUD.cur[1] || el.ended) nextSeg(); else watch();
+  }, 30); };
+  watch();
+}
+function say(segs, rate) {
+  segs = [].concat(segs).filter(Boolean);
+  if (muted || !segs.length) return;
+  if (AUD.map) {
+    const rs = segs.map(t => AUD.map.clips[hkey(t)]);
+    if (rs.every(Boolean)) {
+      if (audioOK()) {
+        try { speechSynthesis.cancel(); } catch (e) {}
+        const items = rs.map(range => ({ range }));
+        if (AUD.curBeep) AUD.q = items;                 // laisse finir le bip, puis parle
+        else { stopAudio(); AUD.q = items; nextSeg(); }
+        return;
+      }
+    } else segs.forEach((t, k) => { if (!rs[k]) AUD.miss.push(t); });
+  }
+  speak(segs.join(' '), rate);
+}
+function speak(text, rate) {
+  if (!('speechSynthesis' in window)) return;
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -561,15 +730,24 @@ function say(text, rate) {
 }
 function unlockAudio() {          // DOIT être appelé dans le geste utilisateur (iOS)
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  const el = aEl();
+  if (!AUD.unlocked) {
+    try { el.volume = 1; const p = el.play(); if (p && p.then) p.then(() => { if (!AUD.cur) el.pause(); }).catch(() => {}); } catch (e) {}
+    AUD.unlocked = true;
+  }
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
     if (AC.state !== 'running') AC.resume();
     const b = AC.createBuffer(1, 1, 22050), s = AC.createBufferSource(); s.buffer = b; s.connect(AC.destination); s.start(0);
   } catch (e) {}
-  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'fr-FR'; speechSynthesis.speak(u); } catch (e) {}
+  if (!AUD.map) try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; u.lang = 'fr-FR'; speechSynthesis.speak(u); } catch (e) {}
 }
-function beep(freq = 880, ms = 180, vol = .3) {
-  if (muted || !AC) return;
+const BEEPS = { tic: [660, 120, .25], fin: [880, 350, .35], go: [1046, 600, .35] };
+function beep(kind) {
+  if (muted) return;
+  if (audioOK() && AUD.map.beeps && AUD.map.beeps[kind]) { stopAudio(); AUD.q = [{ range: AUD.map.beeps[kind], beep: true }]; nextSeg(); return; }
+  if (!AC) return;
+  const [freq, ms, vol] = BEEPS[kind] || BEEPS.tic;
   try {
     const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
     o.type = 'sine'; o.frequency.value = freq;
@@ -579,7 +757,7 @@ function beep(freq = 880, ms = 180, vol = .3) {
 }
 function setMuted(m) {
   muted = m; LS.set('muted', m);
-  if (m) try { speechSynthesis.cancel(); } catch (e) {}
+  if (m) { stopAudio(); try { speechSynthesis.cancel(); } catch (e) {} }
   const lbl = m ? '🔇 Son coupé' : '🔊 Son';
   $('#bMute').textContent = lbl; $('#bMuteHome').textContent = lbl;
 }
@@ -763,7 +941,7 @@ function renderPlan() {
 }
 function renderTomorrow() {
   const d = addDays(now(), 1), p = planFor(d), el = $('#tomorrowCard');
-  const set = LS.get('reglages', { fin: '08:00', marge: 15 });
+  const set = LS.get('reglages', { fin: '07:00', marge: 15 });
   let html = `<h3>Demain · ${JOURS[d.getDay()]} ${d.getDate()} ${MOIS[d.getMonth()]}</h3>`;
   const parts = []; let total = 0;
   let vttLine = '';
@@ -777,8 +955,8 @@ function renderTomorrow() {
   if (!parts.length) {
     html += `<div class="big">Repos. Séance du soir uniquement (${estMin('S')} min).</div><div class="note">Lever libre.</div>`;
   } else {
-    const [hh, mm] = String(set.fin || '08:00').split(':').map(Number);
-    const fin = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hh || 8, mm || 0);
+    const [hh, mm] = String(set.fin || '07:00').split(':').map(Number);
+    const fin = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hh || 7, mm || 0);
     const debut = new Date(fin - total * 60000), lever = new Date(debut - (+set.marge || 15) * 60000);
     const mat = [p.main ? SESS[p.main].mat : '', p.sauna ? SESS.N.mat : ''].filter(Boolean).join(' · ');
     html += `<div class="big">${parts.join(', puis ')}${p.main && p.sauna ? ' (+10 min de transition)' : ''}</div>
@@ -871,12 +1049,12 @@ function renderWeather() {
   }
 }
 function renderSettings() {
-  const s = LS.get('reglages', { fin: '08:00', marge: 15 });
-  $('#setFin').value = s.fin || '08:00'; $('#setMarge').value = String(s.marge || 15);
+  const s = LS.get('reglages', { fin: '07:00', marge: 15 });
+  $('#setFin').value = s.fin || '07:00'; $('#setMarge').value = String(s.marge || 15);
   $('#progNote').textContent = `Programme : ${PROG.version}. Les objectifs se modifient dans programme.json, après chaque analyse mensuelle.`;
 }
 function saveSettings() {
-  LS.set('reglages', { fin: $('#setFin').value || '08:00', marge: +$('#setMarge').value || 15 });
+  LS.set('reglages', { fin: $('#setFin').value || '07:00', marge: +$('#setMarge').value || 15 });
   renderTomorrow();
 }
 
@@ -916,23 +1094,55 @@ function startSession(type) {
   R.steps = buildSteps(type); R.i = 0; R.paused = false; R.startedAt = Date.now(); R.start = now();
   R.total = R.steps.reduce((a, s) => a + s.dur, 0);
   R.log = {};
-  R.steps.forEach(st => { if (st.kind === 'rest') return; const k = logKey(st);
+  R.steps.forEach(st => { if (st.kind === 'rest' || st.nolog) return; const k = logKey(st);
     R.log[k] = R.log[k] || { name: k, planned: 0, done: 0, cible: st.kind === 'work' ? repsText(st.e) : fmtClock(st.dur).replace(/:00$/, ' min'), start: '', end: '' };
     R.log[k].planned++; if (st.kind !== 'work') R.log[k].cible = '';
   });
-  R.steps.forEach(st => { if (st.kind !== 'work' && st.kind !== 'rest') { const k = logKey(st); R.log[k].cible = Math.round(R.steps.filter(s => logKey(s) === k).reduce((a, s) => a + s.dur, 0) / 60) + ' min'; } });
+  R.steps.forEach(st => { if (st.kind !== 'work' && st.kind !== 'rest' && !st.nolog) { const k = logKey(st); R.log[k].cible = Math.round(R.steps.filter(s => logKey(s) === k).reduce((a, s) => a + s.dur, 0) / 60) + ' min'; } });
   $('#runSess').textContent = R.label;
   document.body.classList.remove('paused'); $('#bPause').textContent = 'Pause';
   show('run'); enterStep();
   clearInterval(R.timer); R.timer = setInterval(tick, 200);
 }
 function stepElapsed() { return ((R.paused ? R.pausedAt : performance.now()) - R.stepStart) / 1000; }
-function nextWork(i) { for (let k = i + 1; k < R.steps.length; k++) if (R.steps[k].kind !== 'rest') return R.steps[k]; return null; }
+function nextWork(i, steps) { steps = steps || R.steps; for (let k = i + 1; k < steps.length; k++) if (steps[k].kind !== 'rest') return steps[k]; return null; }
+const workSegs = st => [st.e.name + '.', `Série ${st.set} sur ${st.sets}.`, repsText(st.e) + '.', st.e.safety];
+function restSegs(st, nx) {
+  const intro = nx && nx.kind === 'work' && nx.set === 1;
+  const d = intro ? [`Prochain exercice : ${nx.e.name}.`, DESC[nx.id] ? DESC[nx.id].say : ''] : [];
+  if (st.prep) return ['Installation.'].concat(d);
+  return [`Repos, ${st.dur} secondes.`].concat(d);
+}
+const rest10Segs = nx => ['Dans dix secondes :', `${nx.e.name}, série ${nx.set} sur ${nx.sets}.`];
+const BREATH_INTRO = 'Respiration lente, allongé. Inspire quatre secondes, expire six secondes.';
+const END_STRENGTH = "Séance terminée. Bravo. Arrête la séance sur l'Apple Watch et enregistre-la : renforcement musculaire fonctionnel.";
+const END_OTHER = "Séance terminée. Bravo. Arrête la séance sur l'Apple Watch et enregistre-la.";
+function allPhrases() {             // toutes les phrases que l'app peut dire → générateur de voix
+  const set = new Set(), add = a => [].concat(a).forEach(t => t && set.add(t));
+  const keepLF = LS.get('derniereForce', null);
+  ['A', 'B'].forEach(lf => {
+    LS.set('derniereForce', lf);
+    ['A', 'B', 'I', 'S', 'M', 'L10', 'L20', 'L30', 'L40'].forEach(type => {
+      const steps = buildSteps(type);
+      steps.forEach((st, i) => {
+        if (st.kind === 'work') { add(workSegs(st)); }
+        if (st.kind === 'rest') { const nx = nextWork(i, steps); add(restSegs(st, nx)); if (nx && nx.kind === 'work') add(rest10Segs(nx)); }
+        if (st.kind === 'timed') add(st.say);
+        if (st.cues) st.cues.forEach(c => add(c.say));
+      });
+    });
+  });
+  LS.set('derniereForce', keepLF);
+  for (let d = 60; d <= 90; d += 5) add(`Repos, ${d} secondes.`);
+  Object.values(EX).forEach(e => { add(`Prochain exercice : ${e.name}.`); });
+  add([BREATH_INTRO, 'Inspire', 'Expire', END_STRENGTH, END_OTHER, 'Installation.']);
+  return [...set].map(t => ({ t, k: hkey(t) }));
+}
 function enterStep() {
   const st = R.steps[R.i];
   R.stepStart = performance.now(); R.fired = new Set(); R.lastSec = null; R.breathPhase = null;
-  if (st.kind !== 'rest') { const l = R.log[logKey(st)]; if (l && !l.start) l.start = hms(now()); }
-  const stage = $('#stage'); stage.className = 'stage';
+  if (st.kind !== 'rest' && !st.nolog) { const l = R.log[logKey(st)]; if (l && !l.start) l.start = hms(now()); }
+  const stage = $('#stage'); stage.className = 'stage'; $('#exDesc').innerHTML = '';
   const set = (id, v) => { $(id).textContent = v || ''; };
   $('#breathDot').className = 'breath';
   $('#illus').innerHTML = st.kind === 'rest' ? illFor(nextWork(R.i)) : illFor(st);
@@ -941,29 +1151,31 @@ function enterStep() {
     set('#phase', 'Exercice ' + st.exIndex + '/' + st.exCount); set('#exName', e.name); set('#exDetail', e.detail);
     set('#exTarget', repsText(e)); set('#exSet', `Série ${st.set} sur ${st.sets}`); set('#exSafety', e.safety);
     set('#ringLbl', 'temps de série');
-    say(`${e.name}. Série ${st.set} sur ${st.sets}. ${repsText(e)}. ${e.safety}`);
+    say(workSegs(st));
   } else if (st.kind === 'rest') {
     stage.classList.add('is-rest');
     const nx = nextWork(R.i);
-    set('#phase', st.prep ? 'Prépare-toi · ensuite' : 'Repos · ensuite'); set('#ringLbl', st.prep ? 'mise en place' : 'repos');
+    const intro = nx && nx.kind === 'work' && nx.set === 1;
+    if (intro) stage.classList.add('is-intro');
+    set('#phase', st.prep ? 'Installation · ensuite' : (intro ? 'Repos · exercice suivant' : 'Repos · ensuite')); set('#ringLbl', st.prep ? 'installation' : 'repos');
     if (nx && nx.kind === 'work') {
       set('#exName', nx.e.name); set('#exDetail', nx.e.detail);
-      set('#exTarget', repsText(nx.e)); set('#exSet', `Série ${nx.set} sur ${nx.sets}`); set('#exSafety', nx.e.safety);
+      set('#exTarget', repsText(nx.e) + (intro ? ` · ${nx.sets} séries` : '')); set('#exSet', `Série ${nx.set} sur ${nx.sets}`); set('#exSafety', nx.e.safety);
+      $('#exDesc').innerHTML = intro && DESC[nx.id] ? DESC[nx.id].pts.map(x => `<li>${x}</li>`).join('') : '';
     } else { set('#exName', 'Repos'); set('#exDetail', ''); set('#exTarget', ''); set('#exSet', ''); set('#exSafety', ''); }
-    if (st.prep) say(`Mise en place. Premier exercice : ${nx ? nx.e.name : ''}.`);
-    else say(`Repos, ${st.dur} secondes.${nx && nx.set === 1 ? ' Prochain exercice : ' + nx.e.name + '.' : ''}`);
+    say(restSegs(st, nx));
   } else if (st.kind === 'timed') {
     if (st.cls) stage.classList.add(st.cls);
     set('#phase', st.label); set('#exName', st.title); set('#exDetail', st.detail);
     set('#exTarget', st.dur >= 120 ? Math.round(st.dur / 60) + ' minutes' : st.dur + ' secondes'); set('#exSet', '');
-    set('#exSafety', 'Expire à l’effort, ne bloque jamais ta respiration.');
+    set('#exSafety', st.cls === 'is-watch' ? 'Appuie sur « Passer » quand la montre est lancée.' : 'Expire à l’effort, ne bloque jamais ta respiration.');
     set('#ringLbl', 'restant');
     say(st.say);
   } else if (st.kind === 'breath') {
     stage.classList.add('is-breath');
     set('#phase', 'Respiration'); set('#exDetail', 'Allongé · inspire 4 s, expire 6 s · environ 6 respirations par minute');
     set('#exTarget', ''); set('#exSet', ''); set('#exSafety', 'Expiration longue et douce, sans forcer.');
-    say('Respiration lente, allongé. Inspire quatre secondes, expire six secondes.', .9);
+    say(BREATH_INTRO, .9);
     R.breathDelay = 6;
   }
   tick(true);
@@ -999,27 +1211,27 @@ function tick(force) {
   if (sec !== R.lastSec) {
     R.lastSec = sec;
     if (st.kind === 'rest') {
-      if (sec === 10 && !R.fired.has('10')) { R.fired.add('10'); const nx = nextWork(R.i); if (nx && nx.kind === 'work') say(`Dans dix secondes : ${nx.e.name}, série ${nx.set} sur ${nx.sets}.`); }
-      if (sec <= 3 && sec >= 1) beep(660, 120, .25);
+      if (sec === 10 && !R.fired.has('10')) { R.fired.add('10'); const nx = nextWork(R.i); if (nx && nx.kind === 'work') say(rest10Segs(nx)); }
+      if (sec <= 3 && sec >= 1) beep('tic');
     } else if (st.kind === 'timed' || st.kind === 'work') {
-      if (sec <= 3 && sec >= 1 && st.dur >= 30) beep(660, 110, .2);
+      if (sec <= 3 && sec >= 1 && st.dur >= 30) beep('tic');
     }
   }
   if (st.cues) st.cues.forEach((c, k) => { if (el >= c.at && !R.fired.has('c' + k)) { R.fired.add('c' + k); say(c.say); } });
-  if (rem <= 0) { beep(st.kind === 'rest' ? 1046 : 880, st.kind === 'rest' ? 600 : 350, .35); nextStep(); }
+  if (rem <= 0) { beep(st.kind === 'rest' ? 'go' : 'fin'); nextStep(); }
 }
 function markStepDone() {
   const st = R.steps[R.i];
-  if (st && st.kind !== 'rest') { const l = R.log[logKey(st)]; if (l) { l.done++; l.end = hms(now()); } }
+  if (st && st.kind !== 'rest' && !st.nolog) { const l = R.log[logKey(st)]; if (l) { l.done++; l.end = hms(now()); } }
 }
 function nextStep() { markStepDone(); R.i++; if (R.i >= R.steps.length) finish('terminée'); else enterStep(); }
 function togglePause() {
-  if (!R.paused) { R.paused = true; R.pausedAt = performance.now(); try { speechSynthesis.cancel(); } catch (e) {} $('#bPause').textContent = 'Reprendre'; document.body.classList.add('paused'); }
+  if (!R.paused) { R.paused = true; R.pausedAt = performance.now(); stopAudio(); try { speechSynthesis.cancel(); } catch (e) {} $('#bPause').textContent = 'Reprendre'; document.body.classList.add('paused'); }
   else { R.stepStart += performance.now() - R.pausedAt; R.paused = false; $('#bPause').textContent = 'Pause'; document.body.classList.remove('paused'); unlockAudio(); }
 }
 function haltEngine() {
   clearInterval(R.timer); R.timer = null; keepAwake(false);
-  try { speechSynthesis.cancel(); } catch (e) {}
+  stopAudio(); try { speechSynthesis.cancel(); } catch (e) {}
   document.body.classList.remove('paused');
 }
 function record(statut) {
@@ -1053,8 +1265,8 @@ function finish() {
   $('#endRecap').innerHTML = recap;
   const strength = isForce(R.type) || R.type === 'L';
   $('#endWatch').innerHTML = strength
-    ? `Enregistre la séance sur l'Apple Watch : Renforcement musculaire fonctionnel<small>Sans cela, rien n'arrive dans Apple Santé.</small>`
-    : `Enregistre la séance sur l'Apple Watch<small>Sans cela, rien n'arrive dans Apple Santé.</small>`;
+    ? `Arrête et enregistre la séance sur l'Apple Watch : Renforcement musculaire fonctionnel<small>Sans cela, rien n'arrive dans Apple Santé.</small>`
+    : `Arrête et enregistre la séance sur l'Apple Watch<small>Sans cela, rien n'arrive dans Apple Santé.</small>`;
   // enchaînement : sauna prévu aujourd'hui et pas encore fait
   const p = planFor(now());
   let btns = `<button class="btn endbtn" id="bHome">‹ Retour à l'accueil</button>`;
@@ -1063,7 +1275,7 @@ function finish() {
   $('#endBtns').innerHTML = btns;
   $('#bHome').onclick = () => { renderAll(); show('home'); };
   show('end');
-  say(strength ? "Séance terminée. Bravo. Enregistre la séance sur l'Apple Watch : renforcement musculaire fonctionnel." : "Séance terminée. Bravo. Pense à l'enregistrer sur l'Apple Watch.");
+  say(strength ? END_STRENGTH : END_OTHER);
 }
 
 /* ---------------- Événements ---------------- */
@@ -1081,13 +1293,13 @@ function logSauna() {             // pas de minuteur : on note le sauna en sorta
 }
 $('#bMute').onclick = $('#bMuteHome').onclick = () => { unlockAudio(); setMuted(!muted); };
 $('#bPause').onclick = togglePause;
-$('#bSkip').onclick = () => { try { speechSynthesis.cancel(); } catch (e) {} if (R.paused) togglePause(); nextStep(); };
+$('#bSkip').onclick = () => { stopAudio(); try { speechSynthesis.cancel(); } catch (e) {} if (R.paused) togglePause(); nextStep(); };
 $('#bStop').onclick = () => { if (confirm('Arrêter la séance ? Elle sera notée « interrompue » dans l’export, pas dans le bilan.')) stopSession(); };
 $('#setFin').onchange = $('#setMarge').onchange = saveSettings;
 $('#bExport').onclick = exportCsv;
 
 // hooks de test (Playwright) — sans effet en usage normal
-window.__coach = { jump(i) { R.i = i; enterStep(); }, steps: () => R.steps, csv: buildCsv, prog: () => PROG,
+window.__coach = { phrases: allPhrases, aud: () => AUD, jump(i) { R.i = i; enterStep(); }, steps: () => R.steps, csv: buildCsv, prog: () => PROG,
   state: () => ({ wx: WX, next: nextForce(), plan: planFor(now()) }), finish };
 
 /* ---------------- Démarrage ---------------- */
@@ -1095,6 +1307,8 @@ window.__coach = { jump(i) { R.i = i; enterStep(); }, steps: () => R.steps, csv:
   setMuted(muted);
   renderAll();                                       // accueil immédiat, jamais d'écran de chargement bloquant
   loadProg().then(renderAll);
+  loadVoix();
+  aEl().addEventListener('error', () => { AUD.broken = true; });
   loadWeather().then(w => { WX = w; renderAll(); });
   setInterval(() => { if (!R.timer && $('#home').classList.contains('on')) renderAll(); }, 60000);
   if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});

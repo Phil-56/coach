@@ -17,6 +17,9 @@ reste sur l'iPhone et s'exporte en CSV pour l'analyse mensuelle avec les donnée
 - **Programme de la semaine** (défini dans `programme.json`) : force lundi / mercredi / vendredi
   (alternance A / B), marche mardi / jeudi, sortie longue VTT le samedi, repos le dimanche,
   **sauna infrarouge mardi et jeudi matin**, séance du soir tous les soirs.
+- **Début de séance** : écran « Lance l'Apple Watch » (20 s, ou « Passer » dès que la montre est lancée).
+- **Avant chaque nouvel exercice**, pendant le repos de 75 s : **description détaillée** à l'écran et à la voix
+  (installation, mouvement, respiration) avec le dessin animé.
 - **Séance guidée** : nom de l'exercice en très gros, **dessin animé du mouvement**, répétitions visées,
   « série 2 sur 3 », minuteur de série, repos de 60 à 90 s avec compte à rebours et bip, consignes
   de respiration à la voix. Bande permanente : « 12 à 20 répétitions · Expire à l'effort ·
@@ -25,7 +28,7 @@ reste sur l'iPhone et s'exporte en CSV pour l'analyse mensuelle avec les donnée
   sauna avec un début égal à « maintenant − durée prévue » (25 min par défaut).
 - **Demain** : la veille, l'app affiche la séance du lendemain, sa durée, le matériel à préparer et
   **l'heure de lever** (réglages : heure de fin souhaitée, temps entre le lever et le début).
-  Ex. : séance A ≈ 32 min, fin 8 h 00, marge 15 min → *Lever 7 h 13 · début 7 h 28*.
+  Fin de séance par défaut : **7 h 00**. Ex. : séance A ≈ 33 min, marge 15 min → *Lever 6 h 12 · début 6 h 27*.
   Jour marche + sauna : 30 + 25 + 10 min de transition. Après 18 h, cette carte passe en premier.
 - **Bilan** à partir des séances faites : semaine en cours jour par jour (prévu / fait), compteurs
   force / sauna / soirs / marche par rapport aux cibles, régularité de la force sur 4 semaines,
@@ -147,7 +150,8 @@ Utilise toujours la même entrée (l'icône **ou** Safari) : sur iOS, elles ont 
 3. Ouvre **Coach**, déverrouille la rotation et tourne l'iPhone **en paysage** : la mise en page
    paysage est conçue pour la recopie (testée en 844 × 390 et 932 × 430).
 4. Centre de contrôle › **Recopie de l'écran** › choisis l'Apple TV.
-5. Appuie sur **Démarrer** : ce premier appui débloque aussi la voix sur iOS. Voix et bips sortent sur le téléviseur.
+5. Appuie sur **Démarrer** : ce premier appui débloque aussi le son sur iOS. Voix et bips sortent sur le téléviseur.
+   Si le son reste sur l'iPhone : Centre de contrôle › appui long sur la vignette de lecture › icône AirPlay › choisis l'Apple TV.
 6. Pose le téléphone : la séance s'enchaîne seule. *Pause*, *Passer* et *Arrêter* restent disponibles.
 
 Écran allumé : vidéo muette d'une seconde en boucle + Wake Lock. **Si l'écran s'éteint quand même :
@@ -175,7 +179,7 @@ La recopie AirPlay ne se déclenche pas de façon fiable par un Raccourci : lanc
 ### Durées réelles
 
 Avec 15 à 17 séries et des repos de 60 s (même exercice) / 75 s (changement d'exercice), la séance A
-dure **≈ 32 min**, la B **≈ 38 min**, l'intensité ≈ 34 min, la séance du soir 9 min.
+dure **≈ 33 min**, la B **≈ 40 min**, l'intensité ≈ 35 min, la séance du soir 9 min (écran Apple Watch et installation de 75 s compris).
 Le minuteur de série compte ~3 s par répétition au bas de la fourchette (5 s pour les mollets
 excentriques) + 10 s de mise en place ; « Passer » si tu finis plus tôt.
 
@@ -187,11 +191,15 @@ excentriques) + 10 s de mise en place ; « Passer » si tu finis plus tôt.
 | `programme.json` | Programme et objectifs, à redéfinir après chaque analyse |
 | `manifest.webmanifest`, `icon-*.png` | Ajout à l'écran d'accueil, nom court « Coach » |
 | `sw.js` | Fonctionnement hors ligne (un service worker doit être un fichier séparé) |
+| `voix.m4a`, `voix.json` | Toutes les annonces vocales (voix Thomas) dans un seul fichier audio : il passe par AirPlay et joue plus fort que la synthèse vocale |
+| `outils/generer_voix.py` | Outil de maintenance pour régénérer les voix (pas besoin de le publier) |
 | `.nojekyll` | Sert les fichiers tels quels sur GitHub Pages |
 
 ## Tests effectués (Playwright, Chromium)
 
-47 vérifications OK. Elles couvrent :
+52 vérifications OK. Elles couvrent :
+- chaque phrase prononcée présente dans `voix.m4a` (9 séances parcourues), lecture réelle dans WebKit ;
+- les descriptions et dessins des 12 exercices visibles sans chevauchement en 844 × 390, 932 × 430 et 1280 × 720 ;
 - les captures en 1280 × 720 et 390 × 844 ;
 - la recopie paysage en 844 × 390 et 932 × 430, sans chevauchement avec la bande ;
 - l'absence de tout terme de santé dans la page ;
